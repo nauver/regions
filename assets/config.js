@@ -4,4 +4,5 @@ window.APP_CONFIG = {
   STORAGE_BUCKET: 'participant-photos',
   DEMO_MODE: false,
     POLL_MS: 2000
+    CLOUD_REFRESH_MS: 30000
 };
