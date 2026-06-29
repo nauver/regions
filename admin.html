@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><link rel="stylesheet" href="assets/styles.css?v=1120"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="assets/config.js?v=1120"></script><title>Proud of My Region / Admin</title></head><body class="bg"><div class="logo"><img src="assets/logo_CoR-vertical-negative-en-quadri_LR.png" alt="European Committee of the Regions logo"></div><main class="page"><section class="page-card"><h1>Admin</h1>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><link rel="stylesheet" href="assets/styles.css?v=1150"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="assets/config.js?v=1150"></script><title>Proud of My Region / Admin</title></head><body class="bg"><div class="logo"><img src="assets/logo_CoR-vertical-negative-en-quadri_LR.png" alt="European Committee of the Regions logo"></div><main class="page"><section class="page-card"><h1>Admin</h1>
 <div class="admin-login">
   <div class="field"><label>Admin email</label><input id="adminEmail" type="email"></div>
   <div class="field"><label>Password</label><input id="adminPassword" type="password"></div>
@@ -12,10 +12,10 @@
 <div class="admin-tools" id="adminTools">
   <input id="adminSearch" placeholder="Search name, region, testimony" class="btn" style="background:#fff;color:#10223d;border:2px solid #c7d7ef">
   <select id="adminFilter" class="btn" style="background:#fff;color:#10223d;border:2px solid #c7d7ef"><option value="all">All</option><option value="pending">Pending</option><option value="approved">Approved</option></select>
-  <button class="btn" id="exportJson">Export JSON</button>
-  <button class="btn" id="exportCsv">Export CSV</button>
-  <button class="btn primary" id="approveAll">Approve all pending</button>
-  <button class="btn danger" id="deletePending">Delete pending</button>
+  <button class="btn" id="exportJson" type="button">Export JSON</button>
+  <button class="btn" id="exportCsv" type="button">Export CSV</button>
+  <button class="btn primary" id="approveAll" type="button">Approve all pending</button>
+  <button class="btn danger" id="deletePending" type="button">Delete pending</button>
 </div>
 <div class="admin-list" id="adminList"></div>
-</section></main><div class="toast" id="toast"></div><div class="config-warning" id="configWarning">Configure assets/config.js with your Supabase URL and anon key.</div><div class="credits">© OpenStreetMap contributors · © European Commission – Eurostat GISCO · © EuroGeographics</div><div class="version-badge">v<span data-version></span></div><script src="assets/app.js?v=1100"></script><script src="assets/admin-approval-log.js?v=1120"></script><style>.admin-stats-three{grid-template-columns:repeat(3,1fr)}.approved-by{display:block;margin-top:8px;color:#254993;font-weight:900;font-size:12px;text-transform:none;letter-spacing:0}@media(max-width:720px){.admin-stats-three{grid-template-columns:1fr}}</style><script>initAdmin();</script></body></html>
+</section></main><div class="toast" id="toast"></div><div class="config-warning" id="configWarning">Configure assets/config.js with your Supabase URL and anon key.</div><div class="credits">© OpenStreetMap contributors · © European Commission – Eurostat GISCO · © EuroGeographics</div><div class="version-badge">v<span data-version></span></div><script src="assets/app.js?v=1100"></script><script src="assets/admin-actions-fix.js?v=1150"></script><style>.admin-stats-three{grid-template-columns:repeat(3,1fr)}.approved-by{display:block;margin-top:8px;color:#254993;font-weight:900;font-size:12px;text-transform:none;letter-spacing:0}.admin-action-btn[disabled],#approveAll[disabled]{opacity:.55;cursor:wait}@media(max-width:720px){.admin-stats-three{grid-template-columns:1fr}}</style><script>initAdmin();</script></body></html>
