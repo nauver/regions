@@ -1,4 +1,4 @@
-# Proud of My Region V9.4 regions autocomplete + dedicated map screen
+# Proud of My Region V9.5
 
 Replace these files:
 - index.html
@@ -6,15 +6,22 @@ Replace these files:
 - admin.html
 - map.html
 - map-screen.html
+- disclaimer.html
 - assets/app.js
 - assets/styles.css
 
 Do not replace:
 - assets/config.js
 
-New features:
-- kiosk region autocomplete from official Eurostat/GISCO NUTS 2024 level 2 regions
-- selected region stores precise latitude/longitude in Supabase
-- public wall bottom-left mini map uses Leaflet and GPS coordinates
-- dedicated giant-screen map page: /map-screen.html
-- cache busting: ?v=940
+Important:
+1. Run `supabase-v9-5-migration.sql` in Supabase SQL Editor before testing kiosk submissions.
+2. Deploy files to GitHub Pages.
+3. Hard refresh pages with Ctrl+Shift+R.
+
+New:
+- consent checkbox in kiosk
+- disclaimer page
+- consent metadata saved in Supabase
+- map credits visible
+- Leaflet/OpenStreetMap attribution enabled
+- Eurostat/GISCO attribution included

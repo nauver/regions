@@ -1,7 +1,8 @@
 window.APP_CONFIG = {
-  SUPABASE_URL: 'https://YOUR_PROJECT_ID.supabase.co',
+  SUPABASE_URL: 'https://imkkzdfvqzflhvcfbsld.supabase.co',
   SUPABASE_ANON_KEY: 'YOUR_SUPABASE_ANON_KEY',
   STORAGE_BUCKET: 'participant-photos',
   DEMO_MODE: false,
-  POLL_MS: 2000
+  POLL_MS: 2000,
+  CLOUD_REFRESH_MS: 30000
 };
