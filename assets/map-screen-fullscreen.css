@@ -1,0 +1,71 @@
+
+html,
+body.map-screen-fullscreen-body{
+  margin:0;
+  width:100%;
+  height:100%;
+  min-height:100%;
+  overflow:hidden;
+  background:#071849;
+}
+.map-screen-fullscreen-body .fullscreen-logo,
+.map-screen-fullscreen-body .screen-title-panel,
+.map-screen-fullscreen-body .version-badge{
+  display:none!important;
+}
+.fullscreen-map-wrap{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  padding:0;
+  margin:0;
+  background:#071849;
+  overflow:hidden;
+}
+.fullscreen-map-card{
+  position:absolute;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  padding:0;
+  margin:0;
+  border:0;
+  border-radius:0;
+  background:#d4edfc;
+  overflow:hidden;
+}
+.fullscreen-map,
+.fullscreen-map-card .leaflet-container{
+  width:100vw!important;
+  height:100vh!important;
+  border-radius:0!important;
+}
+.fullscreen-credits{
+  right:10px;
+  bottom:7px;
+  z-index:9999;
+  max-width:72vw;
+  background:rgba(255,255,255,.86);
+  color:#071849;
+  border-radius:9px;
+  font-size:10px;
+  line-height:1.15;
+  padding:4px 7px;
+}
+.leaflet-control-attribution .leaflet-attribution-flag,
+.leaflet-control-attribution a[href*="leafletjs.com"],
+.leaflet-control-attribution a[href*="leaflet.com"],
+.leaflet-control-attribution a[title*="Leaflet"],
+.leaflet-control-attribution a[aria-label*="Leaflet"]{
+  display:none!important;
+}
+.leaflet-control-attribution{
+  font-size:10px!important;
+}
+@media(max-width:900px){
+  .fullscreen-credits{
+    max-width:90vw;
+    font-size:9px;
+  }
+}
