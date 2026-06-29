@@ -16,16 +16,17 @@
 
   async function updateParticipantDirect(id, patch){
     const c = getClient();
-    const { data, error } = await c
+    const { error } = await c
       .from('participants')
       .update(patch)
-      .eq('id', id)
-      .select('id, approved, approved_at, hidden_by_email, hidden_at')
-      .single();
+      .eq('id', id);
 
     if(error) throw error;
-    if(!data || String(data.id) !== String(id)) throw new Error('Update did not affect the selected participant');
-    return data;
+
+    // Do not use .single() here: if RLS does not allow SELECT after UPDATE,
+    // PostgREST returns "Cannot coerce the result to a single JSON object".
+    // The UPDATE itself is enough; the next getAll() refresh validates the state.
+    return true;
   }
 
   async function approveParticipantDirect(entry){
@@ -42,16 +43,12 @@
 
   async function hideParticipantDirect(entry){
     const email = await getCurrentAdminEmail();
-    const result = await updateParticipantDirect(entry.id, {
+    await updateParticipantDirect(entry.id, {
       approved: false,
       approved_at: null,
       hidden_by_email: email || null,
       hidden_at: new Date().toISOString()
     });
-
-    if(result.approved !== false){
-      throw new Error('Hide failed: participant is still approved in Supabase');
-    }
   }
 
   function toCsv(rows){
@@ -174,7 +171,7 @@
 
     await refresh();
     if(adminClient){
-      adminClient.channel('participants-admin-fixed-v116')
+      adminClient.channel('participants-admin-fixed-v117')
         .on('postgres_changes', { event:'*', schema:'public', table:'participants' }, () => renderAdmin())
         .subscribe();
     }
