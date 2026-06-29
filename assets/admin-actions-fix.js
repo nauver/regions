@@ -16,8 +16,16 @@
 
   async function updateParticipantDirect(id, patch){
     const c = getClient();
-    const { error } = await c.from('participants').update(patch).eq('id', id);
+    const { data, error } = await c
+      .from('participants')
+      .update(patch)
+      .eq('id', id)
+      .select('id, approved, approved_at, hidden_by_email, hidden_at')
+      .single();
+
     if(error) throw error;
+    if(!data || String(data.id) !== String(id)) throw new Error('Update did not affect the selected participant');
+    return data;
   }
 
   async function approveParticipantDirect(entry){
@@ -26,19 +34,28 @@
       approved: true,
       approved_at: new Date().toISOString(),
       approved_by_email: email || null,
-      approved_by_at: new Date().toISOString()
+      approved_by_at: new Date().toISOString(),
+      hidden_by_email: null,
+      hidden_at: null
     });
   }
 
   async function hideParticipantDirect(entry){
-    await updateParticipantDirect(entry.id, {
+    const email = await getCurrentAdminEmail();
+    const result = await updateParticipantDirect(entry.id, {
       approved: false,
-      approved_at: null
+      approved_at: null,
+      hidden_by_email: email || null,
+      hidden_at: new Date().toISOString()
     });
+
+    if(result.approved !== false){
+      throw new Error('Hide failed: participant is still approved in Supabase');
+    }
   }
 
   function toCsv(rows){
-    const cols = ['id','full_name','region','country','nuts_code','quote','approved','approved_by_email','approved_by_at','created_at','approved_at','consent_accepted','consent_version','consent_at','retention_until','photo_url'];
+    const cols = ['id','full_name','region','country','nuts_code','quote','approved','approved_by_email','approved_by_at','hidden_by_email','hidden_at','created_at','approved_at','consent_accepted','consent_version','consent_at','retention_until','photo_url'];
     const esc = v => '"' + String(v ?? '').replaceAll('"','""') + '"';
     return [cols.join(','), ...rows.map(r => cols.map(c => esc(r[c])).join(','))].join('\n');
   }
@@ -70,6 +87,14 @@
     }catch(e){ console.warn('Photo delete skipped', e); }
     const { error } = await c.from('participants').delete().eq('id', entry.id);
     if(error) throw error;
+  }
+
+  async function forcePublicPagesRefresh(){
+    try{
+      if(window.localStorage){
+        localStorage.setItem('proudRegionLastAdminChange', String(Date.now()));
+      }
+    }catch(e){}
   }
 
   window.initAdmin = async function initAdmin(){
@@ -122,6 +147,7 @@
         btn.disabled = true;
         const pending = (await getAll()).filter(x => !x.approved);
         for(const entry of pending) await approveParticipantDirect(entry);
+        await forcePublicPagesRefresh();
         toast(`${pending.length} approved`);
         await renderAdmin();
       }catch(e){
@@ -137,6 +163,7 @@
       try{
         const pending = (await getAll()).filter(x => !x.approved);
         for(const entry of pending) await deleteParticipantDirect(entry);
+        await forcePublicPagesRefresh();
         toast(`${pending.length} pending deleted`);
         await renderAdmin();
       }catch(e){
@@ -147,7 +174,7 @@
 
     await refresh();
     if(adminClient){
-      adminClient.channel('participants-admin-fixed')
+      adminClient.channel('participants-admin-fixed-v116')
         .on('postgres_changes', { event:'*', schema:'public', table:'participants' }, () => renderAdmin())
         .subscribe();
     }
@@ -176,6 +203,9 @@
       const approvedBy = entry.approved_by_email
         ? `<small class="approved-by">Approved by ${entry.approved_by_email}${entry.approved_by_at ? ' · ' + new Date(entry.approved_by_at).toLocaleString('en-GB') : ''}</small>`
         : '';
+      const hiddenBy = entry.hidden_by_email
+        ? `<small class="approved-by">Hidden by ${entry.hidden_by_email}${entry.hidden_at ? ' · ' + new Date(entry.hidden_at).toLocaleString('en-GB') : ''}</small>`
+        : '';
 
       const row = document.createElement('div');
       row.className = 'admin-item';
@@ -187,7 +217,8 @@
           <p>${entry.quote}</p>
           <small>Consent: ${entry.consent_accepted ? 'yes' : 'no'} · ${entry.consent_version || 'n/a'}</small>
           ${approvedBy}
-          <span class="${entry.approved ? 'status-approved' : 'status-pending'}">${entry.approved ? 'Approved' : 'Pending'}</span>
+          ${hiddenBy}
+          <span class="${entry.approved ? 'status-approved' : 'status-pending'}">${entry.approved ? 'Approved' : 'Pending / Hidden'}</span>
         </div>
         <div class="admin-actions">
           <button type="button" class="btn admin-action-btn" data-action="toggle" data-id="${entry.id}">${entry.approved ? 'Hide' : 'Approve'}</button>
@@ -207,15 +238,18 @@
           if(action === 'toggle'){
             if(entry.approved){
               await hideParticipantDirect(entry);
-              toast('Hidden');
+              await forcePublicPagesRefresh();
+              toast('Hidden from public pages');
             } else {
               await approveParticipantDirect(entry);
+              await forcePublicPagesRefresh();
               toast('Approved');
             }
           }
           if(action === 'delete'){
             if(confirm('Delete this participant and photo?')){
               await deleteParticipantDirect(entry);
+              await forcePublicPagesRefresh();
               toast('Deleted');
             }
           }
