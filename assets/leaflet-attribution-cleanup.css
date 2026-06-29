@@ -1,0 +1,9 @@
+/* Hide the technical Leaflet.com prefix link from the map attribution while keeping required map/data credits visible. */
+.leaflet-control-attribution .leaflet-attribution-flag,
+.leaflet-control-attribution a[href*="leafletjs.com"],
+.leaflet-control-attribution a[href*="leaflet.com"] {
+  display: none !important;
+}
+.leaflet-control-attribution {
+  font-size: 10px !important;
+}
